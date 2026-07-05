@@ -1,3 +1,9 @@
+// همگام سازی با تلگرام (حل مشکل BOT_INVALID)
+if (window.Telegram && Telegram.WebApp) {
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+}
+
 // افکت ماتریکسی
 const canvas = document.getElementById('matrix');
 const ctx = canvas.getContext('2d');
@@ -33,7 +39,6 @@ fetch('/api/data')
     .then(data => {
         const noData = "از پنل ادمین اضافه شود";
         
-        // کنترل بخش اطلاعات
         const infoWrapper = document.getElementById('info-wrapper');
         if (data.show_info === false) {
             infoWrapper.style.display = 'none';
@@ -49,7 +54,6 @@ fetch('/api/data')
             `;
         }
 
-        // کنترل بخش عکس‌ها
         const imgWrapper = document.getElementById('images-wrapper');
         if (data.show_images === false || !data.images || data.images.length === 0) {
             imgWrapper.style.display = 'none';
@@ -59,7 +63,6 @@ fetch('/api/data')
             ).join('');
         }
 
-        // کنترل بخش ویدیوها
         const vidWrapper = document.getElementById('videos-wrapper');
         if (data.show_videos === false || !data.videos || data.videos.length === 0) {
             vidWrapper.style.display = 'none';
@@ -69,7 +72,6 @@ fetch('/api/data')
             ).join('');
         }
 
-        // کنترل بخش گیف‌ها
         const gifWrapper = document.getElementById('gifs-wrapper');
         if (data.show_gifs === false || !data.gifs || data.gifs.length === 0) {
             gifWrapper.style.display = 'none';
