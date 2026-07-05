@@ -1,4 +1,4 @@
-// افکت ماتریککس
+// افکت ماتریکسی
 const canvas = document.getElementById('matrix');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -27,41 +27,55 @@ document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.keyCode === 85) { e.preventDefault(); return false; }
 });
 
-// گرفتن دیتا از بک‌اند کلودفلر
+// گرفتن دیتا و اعمال تیک‌ها
 fetch('/api/data')
     .then(res => res.json())
     .then(data => {
-        // اگر دیتا خالی بود (هنوز ادمین ثبت نکرده بود)
         const noData = "از پنل ادمین اضافه شود";
         
-        const infoSection = document.getElementById('info-section');
-        infoSection.innerHTML = `
-            <p><span class="prompt">root@anon:~$</span> cat target_info.txt</p><br>
-            <p><span class="label">Target Name:</span> ${data.name || noData}</p>
-            <p><span class="label">Known As:</span> ${data.alias || noData}</p>
-            <p><span class="label">Mobile:</span> ${data.mobile || noData}</p>
-            <p><span class="label">Home:</span> ${data.home || noData}</p>
-            <p><span class="label">Description:</span> ${data.description || noData}</p>
-        `;
+        // کنترل بخش اطلاعات
+        const infoWrapper = document.getElementById('info-wrapper');
+        if (data.show_info === false) {
+            infoWrapper.style.display = 'none';
+        } else {
+            const infoSection = document.getElementById('info-section');
+            infoSection.innerHTML = `
+                <p><span class="prompt">root@anon:~$</span> cat target_info.txt</p><br>
+                <p><span class="label">Target Name:</span> ${data.name || noData}</p>
+                <p><span class="label">Known As:</span> ${data.alias || noData}</p>
+                <p><span class="label">Mobile:</span> ${data.mobile || noData}</p>
+                <p><span class="label">Home:</span> ${data.home || noData}</p>
+                <p><span class="label">Description:</span> ${data.description || noData}</p>
+            `;
+        }
 
-        const imgSection = document.getElementById('images-section');
-        if (data.images && data.images.length > 0) {
-            imgSection.innerHTML = data.images.map(url => 
-                `<div class="media-card"><img src="${url.trim()}" alt="Evidence"></div>`
+        // کنترل بخش عکس‌ها
+        const imgWrapper = document.getElementById('images-wrapper');
+        if (data.show_images === false || !data.images || data.images.length === 0) {
+            imgWrapper.style.display = 'none';
+        } else {
+            document.getElementById('images-section').innerHTML = data.images.map(src => 
+                `<div class="media-card"><img src="${src}" alt="Evidence"></div>`
             ).join('');
         }
 
-        const vidSection = document.getElementById('videos-section');
-        if (data.videos && data.videos.length > 0) {
-            vidSection.innerHTML = data.videos.map(url => 
-                `<div class="media-card video-card"><video controls muted><source src="${url.trim()}" type="video/mp4"></video></div>`
+        // کنترل بخش ویدیوها
+        const vidWrapper = document.getElementById('videos-wrapper');
+        if (data.show_videos === false || !data.videos || data.videos.length === 0) {
+            vidWrapper.style.display = 'none';
+        } else {
+            document.getElementById('videos-section').innerHTML = data.videos.map(src => 
+                `<div class="media-card video-card"><video controls muted><source src="${src}" type="video/mp4"></video></div>`
             ).join('');
         }
 
-        const gifSection = document.getElementById('gifs-section');
-        if (data.gifs && data.gifs.length > 0) {
-            gifSection.innerHTML = data.gifs.map(url => 
-                `<div class="media-card"><img src="${url.trim()}" alt="GIF"></div>`
+        // کنترل بخش گیف‌ها
+        const gifWrapper = document.getElementById('gifs-wrapper');
+        if (data.show_gifs === false || !data.gifs || data.gifs.length === 0) {
+            gifWrapper.style.display = 'none';
+        } else {
+            document.getElementById('gifs-section').innerHTML = data.gifs.map(src => 
+                `<div class="media-card"><img src="${src}" alt="GIF"></div>`
             ).join('');
         }
     })
