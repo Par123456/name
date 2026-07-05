@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Access</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .admin-form input, .admin-form textarea {
+            width: 100%; padding: 10px; margin-bottom: 15px;
+            background: #111; border: 1px solid #0f0; color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .admin-form label { color: #ff0; display: block; margin-bottom: 5px; }
+        .btn-save {
+            background: #0f0; color: #000; border: none; padding: 10px 20px;
+            cursor: pointer; font-weight: bold; width: 100%;
+        }
+        .btn-save:hover { background: #0c0; }
+        .login-box { text-align: center; }
+        .login-box input { max-width: 300px; margin: 0 auto 20px auto; }
+        
+        .toggle-group { margin-bottom: 20px; border: 1px dashed #333; padding: 15px; }
+        .toggle-item { display: flex; align-items: center; margin-bottom: 10px; }
+        .toggle-item input[type="checkbox"] { width: 20px; height: 20px; margin-left: 10px; accent-color: #0f0; }
+        .toggle-item label { margin: 0; color: #0f0; cursor: pointer; }
+        
+        .upload-box { margin-bottom: 20px; }
+        .file-status { color: #08f; font-size: 0.8rem; margin-top: 5px; }
+        .btn-clear { background: #f00; color: #fff; border: none; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 800px;">
+        <header>
+            <h1 class="glitch" data-text="ADMIN CONTROL">ADMIN CONTROL</h1>
+            <p class="subtitle">// AUTHORIZED ACCESS ONLY //</p>
+        </header>
+
+        <!-- گیت ورود -->
+        <div id="login-gate" class="terminal-box">
+            <div class="terminal-header">
+                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                <span class="terminal-title">auth.sh</span>
+            </div>
+            <div class="terminal-body login-box">
+                <p style="margin-bottom: 20px; color: red;">// AUTHENTICATION REQUIRED //</p>
+                <input type="password" id="login-pass" placeholder="ENTER PASSWORD" style="width: 80%; text-align: center;">
+                <br>
+                <button onclick="attemptLogin()" class="btn-save" style="width: auto; padding: 10px 40px;">AUTHENTICATE</button>
+                <div id="login-error" style="color: red; margin-top: 15px;"></div>
+            </div>
+        </div>
+
+        <!-- پنل ادمین -->
+        <div id="admin-panel" class="terminal-box" style="display: none;">
+            <div class="terminal-header">
+                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                <span class="terminal-title">update_payload.sh</span>
+            </div>
+            <div class="terminal-body">
+                <form class="admin-form" id="dataForm">
+                    
+                    <div class="toggle-group">
+                        <div class="toggle-item">
+                            <input type="checkbox" id="show_info" checked>
+                            <label for="show_info">نمایش بخش اطلاعات متن</label>
+                        </div>
+                        <div class="toggle-item">
+                            <input type="checkbox" id="show_images" checked>
+                            <label for="show_images">نمایش بخش عکس‌ها</label>
+                        </div>
+                        <div class="toggle-item">
+                            <input type="checkbox" id="show_videos" checked>
+                            <label for="show_videos">نمایش بخش ویدیوها</label>
+                        </div>
+                        <div class="toggle-item">
+                            <input type="checkbox" id="show_gifs" checked>
+                            <label for="show_gifs">نمایش بخش گیف‌ها</label>
+                        </div>
+                    </div>
+
+                    <label>نام (Name):</label>
+                    <input type="text" id="name" placeholder="مثلا: امیرعلی">
+
+                    <label>نام مستعار (Alias):</label>
+                    <input type="text" id="alias" placeholder="مثلا: نیملس">
+
+                    <label>شماره موبایل (Mobile):</label>
+                    <input type="text" id="mobile" placeholder="09xxx">
+
+                    <label>شماره منزل (Home):</label>
+                    <input type="text" id="home" placeholder="0xx">
+
+                    <label>توضیحات (Description):</label>
+                    <textarea id="description" rows="4" placeholder="توضیحات کامل..."></textarea>
+
+                    <div class="upload-box">
+                        <label>آپلود عکس‌ها (jpg, png, webp):</label>
+                        <input type="file" id="file-images" accept="image/jpeg,image/png,image/webp" multiple>
+                        <div class="file-status" id="status-images">فایلی انتخاب نشده</div>
+                        <button type="button" class="btn-clear" onclick="clearFiles('images')">پاک کردن عکس‌های آپلود شده</button>
+                    </div>
+
+                    <div class="upload-box">
+                        <label>آپلود ویدیوها (mp4):</label>
+                        <input type="file" id="file-videos" accept="video/mp4" multiple>
+                        <div class="file-status" id="status-videos">فایلی انتخاب نشده</div>
+                        <button type="button" class="btn-clear" onclick="clearFiles('videos')">پاک کردن ویدیوهای آپلود شده</button>
+                    </div>
+
+                    <div class="upload-box">
+                        <label>آپلود گیف‌ها (gif):</label>
+                        <input type="file" id="file-gifs" accept="image/gif" multiple>
+                        <div class="file-status" id="status-gifs">فایلی انتخاب نشده</div>
+                        <button type="button" class="btn-clear" onclick="clearFiles('gifs')">پاک کردن گیف‌های آپلود شده</button>
+                    </div>
+
+                    <button type="submit" class="btn-save">EXECUTE SAVE (ذخیره و بروزرسانی)</button>
+                </form>
+                <div id="status-msg" style="margin-top: 15px; color: #0f0;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/admin.js"></script>
+</body>
+</html>
