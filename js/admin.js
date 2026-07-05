@@ -1,4 +1,4 @@
-let adminPassword = '';
+let adminPassword = 'AnishtayiN';
 let currentData = {
     show_info: true, show_images: true, show_videos: true, show_gifs: true,
     name: "", alias: "", mobile: "", home: "", description: "",
